@@ -85,7 +85,7 @@ class HTTPClient(object):
         """Forget all of our authentication information."""
         requests.get(
             '%s://%s/logout' % (self.protocol, self.host),
-            cookies={'beegosessionID': self.session_id},
+            cookies={'sid': self.session_id},
             verify=self.verify_cert)
         logging.debug("Successfully logout")
 
@@ -220,7 +220,7 @@ class HTTPClient(object):
             body = self._time_request(
                 url,
                 method,
-                cookies={'beegosessionID': self.session_id},
+                cookies={'sid': self.session_id},
                 **kwargs)
             return body
         except exceptions.Unauthorized as e:
@@ -265,7 +265,7 @@ class HTTPClient(object):
 
         try:
             resp = requests.post(
-                self.baseurl + "/login",
+                self.baseurl + "c//login",
                 data={'principal': self.username,
                       'password': self.password},
                 verify=self.verify_cert)
@@ -277,7 +277,7 @@ class HTTPClient(object):
                    " TLS (https) requests.")
             raise exceptions.AuthorizationFailure(msg)
         if resp.status_code == 200:
-            self.session_id = resp.cookies.get('beegosessionID')
+            self.session_id = resp.cookies.get('sid')
             logging.debug(
                 "Successfully login, session id: %s" % self.session_id)
         if resp.status_code >= 400:
